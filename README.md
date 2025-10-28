@@ -24,3 +24,8 @@ ReadMe (Nicoline):
 - Metoder
 - Timeline og fordeling af opgaver
 - Repo organisering (Mikkel)
+
+
+Links:
+- https://github.com/blitt2018/SPoRC_analysis/tree/master?tab=readme-ov-file (analysis)
+- https://github.com/blitt2018/SPoRC_data (data)
