@@ -19,7 +19,7 @@ Opdelt i de 3 spor:
 - Undersøge at lave en metode identifikation af afbrydelser vha. overlap speaker labels, overlap i start/end times og audio features. Kan vi finde dem? Giver det mening? Initial evaluering med propOverlap kolonne pr. episode sammenlignet med vores fundne propOverlap på egne overlap labels
 
 ReadMe (Nicoline):
-- Abstract = kort forklaret projekt ide
+- Abstract = kort forklaret projekt ide --> undersøge podcast retorik på tværs af genrer ved at undersøge afbrydelser, cta og sentiments ift. hvordan de snakker, hvad de siger, hvor meget de afbryder, tonen er hård, sød osv.
 - Contributions
 - Metoder
 - Timeline og fordeling af opgaver
