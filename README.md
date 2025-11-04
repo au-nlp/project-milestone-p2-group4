@@ -47,7 +47,7 @@ Finally the different part of the analysis will be combined in a correlation ana
 
 ## Team organization
 We are planning on working close together through multiple weekly meetings where tasks and milestones will be divided. The overall responsibility for the different parts will however be:
-- Marcus: Call-to-action detection and analysis + Correlation analysis
+- Marcus: Data handeling & overview + CTA analysis + Correlation analysis
 - Mikkel: Interruption analysis + Data visualization across the analysis
 - Nicoline: Sentiment analysis + Report writing + Project management
 
