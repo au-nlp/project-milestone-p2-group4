@@ -1,38 +1,5 @@
 [![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/hgNAtOO3)
 
-Grov plan (i notebook):
-
-Styr på data (Marcus, deadline ASAP):
-- Loadet data
-- Overblik over størrelse og indhold af data
--   Kan vi bruge det hele eller skal vi cutte det ned?
--   Descriptive statistics
-- Intial data cleaning (NA, fjerne irrelevante kolonner overall etc.)
-
-Opdelt i de 3 spor:
-- Data klargjort til hver analyse
--   Interruptions (Mikkel)
--   Call to action (Marcus)
--   Sentiment analysis (Nicoline)
-- Undersøge og lille POC på forskellige libraries/funktioner til f.eks. sentiment analysis + overblik over metoder + passe til data
-- Undersøge metoder til CTA identification/classification, findes der noget? Lave det selv? Evt. med LLM zero vs. few shot - vælge metode ud fra det
-- Undersøge at lave en metode identifikation af afbrydelser vha. overlap speaker labels, overlap i start/end times og audio features. Kan vi finde dem? Giver det mening? Initial evaluering med propOverlap kolonne pr. episode sammenlignet med vores fundne propOverlap på egne overlap labels
-
-ReadMe (Nicoline):
-- Abstract = kort forklaret projekt ide --> undersøge podcast retorik på tværs af genrer ved at undersøge afbrydelser, cta og sentiments ift. hvordan de snakker, hvad de siger, hvor meget de afbryder, tonen er hård, sød osv.
-- Contributions
-- Metoder
-- Timeline og fordeling af opgaver
-- Repo organisering (Mikkel)
-
-
-Links:
-- https://github.com/blitt2018/SPoRC_analysis/tree/master?tab=readme-ov-file (analysis)
-- https://github.com/blitt2018/SPoRC_data (data)
-- https://github.com/davidjurgens/sporc/tree/main/docs/wiki (sproc library wiki)
-- https://www.kaggle.com/code/josephnehrenz/nlp-sentiment-analysis-of-joe-rogan-experience (spændende tilgang til lignende case)
-
-
 # Conversation dynamics in podcasts: An analysis of interruptions, calls to action and sentiment across genres
 
 ## Abstract
@@ -71,12 +38,12 @@ The project is centered around three different analytical components:
 Finally the different part of the analysis will be combined in a correlation analysis to find relationsships between sentiments, interruptions and CTA across genres to answer questions like; "Is emotionally charged language correlated with use of more pursaisive language and more frequent interruptions in conversation?". Beyond these main points of analysis there are also methods used for descriptive statistical analysis of the dataset, relationsship modelling in general and data visualization for the comparisons, which will be decided on a need basis throughout the project. 
 
 ## Timeline (from P2 to P3)
-Week 46: Sentiment analysis
-Week 47: Interruptions analysis
-Week 48: Call-to-action detection
-Week 49: Combination of analysis and correlation analysis
-Week 50: Final results synthesis and report writing
-Week 51: Final report writing
+- Week 46: Working on the 3 analysis parts
+- Week 47: Working on the 3 analysis parts
+- Week 48: Working on the 3 analysis parts
+- Week 49: Combination of analysis and correlation analysis
+- Week 50: Final results synthesis and report writing
+- Week 51: Final report writing
 
 ## Team organization
 We are planning on working close together through multiple weekly meetings where tasks and milestones will be divided. The overall responsibility for the different parts will however be:
@@ -86,3 +53,9 @@ We are planning on working close together through multiple weekly meetings where
 
 ## Repo organization
 The repo consists of a folder with data (stored locally and not contained in git), and a folder with all helpers stored in seperate .py files for easy management. The root folder containts the main .ipynb, the .gitignore file and the README.md (this file). A final folder notebooks stores all additional .ipynb files used for initial analysis and exploration of data, where code and content is then moved to the main .ipynb if relevant to the final analysis.
+
+## Links and additional ressources for potential use
+- https://github.com/blitt2018/SPoRC_analysis/tree/master?tab=readme-ov-file (analysis)
+- https://github.com/blitt2018/SPoRC_data (data)
+- https://github.com/davidjurgens/sporc/tree/main/docs/wiki (sproc library wiki)
+- https://www.kaggle.com/code/josephnehrenz/nlp-sentiment-analysis-of-joe-rogan-experience (similar analysis in R)
