@@ -59,3 +59,29 @@ The repo consists of a folder with data (stored locally and not contained in git
 - https://github.com/blitt2018/SPoRC_data (data)
 - https://github.com/davidjurgens/sporc/tree/main/docs/wiki (sproc library wiki)
 - https://www.kaggle.com/code/josephnehrenz/nlp-sentiment-analysis-of-joe-rogan-experience (similar analysis in R)
+
+
+## Interne noter til møde 4/12
+Vi skal have lavet et fælles sample at køre koden på af min 1000 episoder, hvor der er balance mellem genrer og filtreret episoder uden genrer, tekst osv. fra, så de 1000 rent faktisk er 1000 brugbare. Pt. i sentiment laver jeg random sample på 100, men det giver kun 11 episoder efter oprydning, så den skal laves inden --> skal blive til en ny fil måske eller bare ligge i koden som variabel? Overvejelse. 
+
+Tilret koden med inspection af data og statistics til det nye slice efter preprocessing (se længere nede).
+
+Der skal ryddes op i koden - fjerne, ændre og tilføje kommentarer så alt giver mening, og ikke ser chat agtigt ud. Der skal laves overskrifter og forklaringer til de forskellige komponentet når det rykkes til main. 
+
+Der skal laves en fælles pre-processing pipeline på sætninger, da jeg i min kode ser at f.eks. "'s a", "part." og andre skøre ting får lov at være sin egen sætning uden at det er sigende. Tænker samme problemstilling kunne afhjælpe nogle af problemerne i interruptions og CTA + at vi arbejder mere standardiseret med teksterne. 
+
+Vi skal have lavet hypoteser + kode til correlation analysis mellem de forksellige analyser for at se sammenhænge, og det kræver nok et overblik over hvad vi egentlig har og hvordan tingene kan sammenstilles. Samle tabeller med resultater pr. sætning, episode eller genre til at lave tingene. Kræver standardisering af hvordan vi arbejder videre på sentences_df og lignende, så de namt kan joines igen. Obs på at kontrollere for ubalance i episodelængder, antal sætninger i episode. Lave nogle fede komparative plots af tingene. 
+
+Vi skal have udvalgt og forfinet de relevante plots, så de kan bruges direkte i raportern - de skal se ens ud for alle elementerne, så vi skal standardisere brug af pakker, farver, sprog, navne osv. 
+
+Alt koden skal køres igennem på en god computer når ovenstående rettelser er lavet, så vi får de endelige resultater klar. 
+
+Vi skal have klare definitioner klar på de ting vi arbejder med. Hvad betyder sentiment (binær vs. labels)? Hvad er CTA (A call-to-action is an utterance that explicitly invites the listener to take an action (subscribe, donate, buy, visit, follow, rate, share…).”) - inkl. scope?
+
+Begynde at skrive rapport:
+- Introduction + research questions
+- Dataset (SPoRC), sampling strategy, preprocessing
+- Methods (3 sections: interruptions, CTA, sentiment) incl. Evaluation (each method: short, clear)
+- Results (3 sections + combined correlation)
+- Discussion (limitations, confounds, future work)
+- Conclusion
