@@ -85,3 +85,25 @@ Begynde at skrive rapport:
 - Results (3 sections + combined correlation)
 - Discussion (limitations, confounds, future work)
 - Conclusion
+
+
+Plan:
+1. Fælles datagrundlag --> rydde op i episoderne så alle har genre + alle har turns (måske mere end 2) + evt. andet --> lav et random sample stratried på genrer på min. 1000 i alt
+2. Fælles pre-processing pipeline --> split i turns + rengør (fjern sætninger af 1 ord eller kun tegn eller lignende) --> turn_df inkl. info om episode + genre osv. til regression
+3. Fælles deskreptiv statistik afsnit tilrettes og genkøres
+4. Indsætte CTA kode i main --> tilrettes turn_df datastruktur enten ved at køre pr. turn eller ved at køre pr. sætning og aggregere + proxy evaluering af udvalgte samples + inter-method agreement kohens kappa
+5. Indæstte sentiment kode i main --> tilrettes til at køre pr. turn til turn_df
+6. Indsætte interruptions kode i main --> tilret til turn_df + undersøg andre måder til detektion
+7. Plots --> fælles ramme for hvordan de ser ud + helpers til dem hver især + udvælg for hvert område hvad der er relevant for konklusioner + overveje fælles plots på tværs (histogram, density, tidsserier)
+8. Ud fra plots og intuition skal der defineres nogle hypoteser til korrelation analyse
+9. Lave korrelation analyse og resultater herfra
+10. Lave mini fælles-analyse om ændring i sentiment umiddelbart før og efter CTA eller interruption som support
+11. Rydde op i kode --> fjerne chat kommentarer der ser chat agtige ud, følge samme kode standard (evt. pep8) + flyt evt. ting til helpers som ikke er essentielt
+12. Skrive rapport
+
+
+Hypoteser:
+- Sammenhæng mellem negativ sentiment og afbrydelser
+- Sammenhæng mellem positiv sentiment og cta
+- Sammenhæng mellem genrer og sentiment/afbrydelser/cta + evt. specifikke
+- Flest cta i slutningen af episode, sammenhæng mellem cta og episode progress 0-1
