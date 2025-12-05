@@ -102,7 +102,9 @@ Plan:
 12. Skrive rapport
 
 N = skriv rapport groft, lav fælles plot kode inkl. parameterstyring af visuelle ting, fikse egen kode og sætte i main
+
 Mi = fikse egen kode, lave mini-analyse og korrelations analyse kode opstart klar til resultater
+
 Ma = fikse egen kode, lave fælles data pipeline 
 
 Hypoteser:
