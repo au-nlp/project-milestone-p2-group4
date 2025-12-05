@@ -101,6 +101,9 @@ Plan:
 11. Rydde op i kode --> fjerne chat kommentarer der ser chat agtige ud, følge samme kode standard (evt. pep8) + flyt evt. ting til helpers som ikke er essentielt
 12. Skrive rapport
 
+N = skriv rapport groft, lav fælles plot kode inkl. parameterstyring af visuelle ting, fikse egen kode og sætte i main
+Mi = fikse egen kode, lave mini-analyse og korrelations analyse kode opstart klar til resultater
+Ma = fikse egen kode, lave fælles data pipeline 
 
 Hypoteser:
 - Sammenhæng mellem negativ sentiment og afbrydelser
