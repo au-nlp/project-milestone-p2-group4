@@ -112,3 +112,9 @@ Hypoteser:
 - Sammenhæng mellem positiv sentiment og cta
 - Sammenhæng mellem genrer og sentiment/afbrydelser/cta + evt. specifikke
 - Flest cta i slutningen af episode, sammenhæng mellem cta og episode progress 0-1
+
+
+## Noter til møde 11/12
+
+Måske kigge på turn.is_overlapping (turn involves multiple speakers) til interruption pipeline. \\
+Overveje cutoff for hvor små sætninger vi vil have med: lige nu 10 characters

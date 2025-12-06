@@ -51,13 +51,15 @@ APPLE_PODCAST_CATEGORIES = {
         "Medicine",
         "Mental Health",
         "Nutrition",
-        "Sexuality"
+        "Sexuality",
+        "Health"
     ],
     "Kids & Family": [
         "Education for Kids",
         "Parenting",
         "Pets & Animals",
-        "Stories for Kids"
+        "Stories for Kids",
+        "Kids"
     ],
     "Leisure": [
         "Animation & Manga",
@@ -108,7 +110,8 @@ APPLE_PODCAST_CATEGORIES = {
         "Personal Journals",
         "Philosophy",
         "Places & Travel",
-        "Relationships"
+        "Relationships",
+        "Society"
     ],
     "Sports": [
         "Baseball",
@@ -134,7 +137,8 @@ APPLE_PODCAST_CATEGORIES = {
         "Film History",
         "Film Interviews",
         "Film Reviews",
-        "TV Reviews"
+        "TV Reviews",
+        "Tv"
     ]
 }
 
@@ -174,7 +178,7 @@ def _normalize(category: str) -> str:
     """Normalize category name for consistent case-insensitive lookup."""
     if not category:
         return ""
-    return category.strip().title()
+    return category.strip()
 
 
 # Supported languages
