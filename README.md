@@ -116,5 +116,4 @@ Hypoteser:
 
 ## Noter til møde 11/12
 
-Måske kigge på turn.is_overlapping (turn involves multiple speakers) til interruption pipeline. \\
-Overveje cutoff for hvor små sætninger vi vil have med: lige nu 10 characters
+Måske kigge på turn.is_overlapping (turn involves multiple speakers) til interruption pipeline. 
