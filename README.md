@@ -117,3 +117,7 @@ Hypoteser:
 ## Noter til møde 11/12
 
 Måske kigge på turn.is_overlapping (turn involves multiple speakers) til interruption pipeline. 
+
+Hvor maget text vil vi have med i main. Har skrevet meget til CTA som jeg tænkte kunne bruges i vore rapport, men det behøver ikke nødvendigvis være med.
+
+Jeg har også bare includeret alt kode, måske skal jeg fjerne nogle funktioner? Men tærker også gerne de vil se logikken?
