@@ -1,3 +1,4 @@
-data/
+data/*
+!data/sentences_llm.parquet 
 helpers/__pycache__/
 helpers/sporc/__pycache__/
