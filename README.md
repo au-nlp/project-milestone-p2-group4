@@ -118,6 +118,8 @@ Hypoteser:
 
 Måske kigge på turn.is_overlapping (turn involves multiple speakers) til interruption pipeline. 
 
+I main skal vi da loade ALLE pakker i starten, eller loader vi nye pakker til hver analyse-del?
+
 Hvor maget text vil vi have med i main. Har skrevet meget til CTA som jeg tænkte kunne bruges i vore rapport, men det behøver ikke nødvendigvis være med.
 
-Jeg har også bare includeret alt kode, måske skal jeg fjerne nogle funktioner? Men tærker også gerne de vil se logikken?
+Jeg har inkluderet alt kode, måske skal jeg fjerne nogle funktioner? Jeg tærker dog gerne de vil se logikken?
