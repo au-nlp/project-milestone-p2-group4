@@ -113,6 +113,7 @@ Hypoteser:
 - Sammenhæng mellem genrer og sentiment/afbrydelser/cta + evt. specifikke
 - Flest cta i slutningen af episode, sammenhæng mellem cta og episode progress 0-1
 
+Link til overleaf: https://www.overleaf.com/2854646214xxhzjzmfqchm#e88e2b
 
 ## Noter til møde 11/12
 
