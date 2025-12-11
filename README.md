@@ -124,3 +124,13 @@ I main skal vi da loade ALLE pakker i starten, eller loader vi nye pakker til hv
 Hvor meget text vil vi have med i main. Har skrevet meget til CTA som jeg tænkte kunne bruges i vore rapport, men det behøver ikke nødvendigvis være med.
 
 Jeg har inkluderet alt kode, måske skal jeg fjerne nogle funktioner? Jeg tærker dog gerne de vil se logikken? Hellere for meget end for lidt.
+
+## Ny plan frem til deadline
+
+Nico: Ryk min kode i main + peg på de nye datatabeller + aggreger til højere niveauer + lave plot kode/funktioner med fælles navngicning, udseende og farver + skriv eget metode afsnit + skriv rapport færdig når kode/resultater/plots er færdigt
+
+Mikkel: Correlation analysis + tilføje kolonner i df + skrive eget metode afnsit (udkast) + kør kode og sikre resultater (mandag)
+
+Marcus: skrive eget metode afnsit (udkast) + kigge på timelines ved cta + dataframes i git så alt ikke skal køres altid. 
+
+Deadlines: Kode færdig = søndag. Køre kode og resultater klar = mandag. Udkast til metodeafsnit = torsdag. Endelig rapport = fredag.
