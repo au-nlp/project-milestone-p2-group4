@@ -1,5 +1,10 @@
 data/*
 !data/sentences_llm.parquet 
+!data/episodes.parquet 
+!data/episodes.parquet 
+!data/turns_flagged.parquet
+!data/turns.parquet
+!data/sentences.parquet
 helpers/__pycache__/
 helpers/sporc/__pycache__/
 Deprecated/
