@@ -25,7 +25,8 @@ The project is centered around three different analytical components:
      - Genre level comparison across features, types and aggregate metrics like interruption overlap, frequency etc.
      - Graph modelling of found interruptions to discover relationsships
 - Call-to-action detection
-    - Detection and extraction of CTA based on e.g. logical flagging and LLM judgements
+    - Flagging of candidate CTAs on sentence-level using rule-based approach   
+    - Detection and extraction of CTAs among the flagged sentences using causal language modeling
     - Analysis of frequence and positional information in the podcast episode timeline
     - Genre level comparison of patterns of use, frequency and intensity of CTA and action-oriented language
 - Sentiment analysis
@@ -41,7 +42,7 @@ Finally the different part of the analysis will be combined in a correlation ana
 
 ## Team organization and individual contributions
 - Marcus: Data handling + data preprocessing pipeline + CTA analysis
-- Mikkel: Interruption analysis + correlation analysis 
+- Mikkel: Interruption analysis + clustering + correlation analysis 
 - Nicoline: Sentiment analysis + data visualizations + final report write up (combining parts, writing abstract, conclusion etc.)
 
 Each group member has written the parts of the report related to their area of analysis, and we have had weekly meetings going over each analysis and the combined analysis and conclusions, so everyone has been involved at high level in all parts of the final work.
