@@ -174,7 +174,7 @@ Podcast intros, outros, and sponsor reads can repeat across episodes, so we norm
 
 \subsection{Correlation analysis}
 
-After having done our linguistic analysis in the three aforementioned parts and enriched the dataset with new columns and findings, it only makes sense to interweave them and see how they correlate with each other. The go-to statistical tool for analyzing this, is going to be regression analysis to figure out the relationships between the different variables. The main relationships that we hypothesize being true are: correlation between negative sentiment and interruptions, correlation between positive sentiment and call to action, and correlation between specific genres and some of the above mentioned variables. In addition to regression analysis, we implemented a framework to analyze sentiment in the turns surrounding interruptions, with the goal of examining their contextual interplay.
+After having done our linguistic analysis in the three aforementioned parts and enriched the dataset with new columns and findings, it only makes sense to interweave them and see how they correlate with each other. The go-to statistical tool for analyzing this, is going to be regression analysis to figure out the relationships between the different variables. The main relationships that we hypothesize being true are: correlation between negative sentiment and interruptions, correlation between positive sentiment and call to action. In addition to regression analysis, we implemented a framework to analyze sentiment in the turns surrounding interruptions, with the goal of examining their contextual interplay.
 
 \section{Results}
 The section details the results related to each research question.
@@ -203,7 +203,7 @@ Taken together, these positional patterns could suggest that CTAs primarily serv
 
 \subsection{Correlations and combined results}
 
-Looking at the covariance matrix, reveals a moderate positive association between interruption occurrence and several turn-level characteristics. In particular, the strongest relationships are observed with the number of sentences that contain sentiment $(\rho = 0.38)$, the total number of sentences $(\rho = 0.25)$, the number of words $(\rho = 0.23)$, and the duration of the turn $(\rho = 0.22)$. These findings suggest that longer and more expressive turns are more likely to coincide with interruptions. For call to action, duration and number of sentences are also some of the most correlated ones along with the business category. This also seems reasonable, as longer sentences and longer turns provide more opportunity for CTAs to occur. Business-related episodes tend to include promotions and advertisements. For sentiment, there is really not much to highlight. 
+Looking at the covariance matrix, reveals a moderate positive association between interruption occurrence and several turn-level characteristics. In particular, the strongest relationships are observed with the number of sentences that contain sentiment $(\rho = 0.38)$, the total number of sentences $(\rho = 0.25)$, the number of words $(\rho = 0.23)$, and the duration of the turn $(\rho = 0.22)$. These findings suggest that longer and more expressive turns are more likely to coincide with interruptions. For call to action, duration and number of sentences are also some of the most correlated ones along with the business category. This also seems reasonable, as longer sentences and longer turns provide more opportunity for CTAs to occur. Business-related episodes tend to include promotions and advertisements. For sentiment, there is really not much to highlight. A logistic regression using VADER compound sentiment as the sole predictor reveals a weak positive association with interruption occurrence. While the coefficient is positive $(\beta = 0.65)$, indicating higher odds of interruption for more positive sentiment, the effect is only marginally significant $(p = 0.052)$. The coefficient for vader mean was negative and statistically significant $(\beta = -0.257, p < 0.001)$. This indicates that increases in sentiment positivity are associated with a lower likelihood of including a CTA. 
 
 Interruption seems to have some impact on the sentiment in the surrounding turns based on our plot. The average sentiment before is somewhat smoother around $0$ i.e. very neutral, but afterwards, there is more variance present. This is to be expected to some degree, as interruptions might occur in heated discussion where the sentiment could turn negative, or in more enthusiastic scenarios, where the opposite would hold true. 
 
@@ -287,5 +287,27 @@ Technical appendices with additional results, figures, graphs and proofs may be 
     \label{fig:cta_frequency_by_category}
 \end{figure}
 
+\subsection{Interruption Figures}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\linewidth]{../figures/average_sentiment_demeaned_20.png}
+    \caption{Average sentiment 20 turns before and after interruptions}
+    \label{fig:sentiment_around_interruptions}
+\end{figure}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\linewidth]{../figures/interuptions_by_category.png}
+    \caption{Distribution of interruptions across genres on an episode level}
+    \label{fig:interuptions_by_category}
+\end{figure}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\linewidth]{../figures/cluster_vs_category}
+    \caption{Distribution of which clusters interruptions lie in across genres with K-means as the clustering method}
+    \label{fig:cluster_vs_category}
+\end{figure}
 
 \end{document}
