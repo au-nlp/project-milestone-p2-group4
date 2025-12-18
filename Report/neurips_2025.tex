@@ -8,6 +8,7 @@
 % Before accepting by the NeurIPS conference, select one of the options below.
 % 0. "default" for submission
 \usepackage[main,final]{neurips_2025}
+\usepackage{float}
 % the "default" option is equal to the "main" option, which is used for the Main Track with double-blind reviewing.
 % 1. "main" option is used for the Main Track
 % 2. "position" option is used for the Position Paper Track
@@ -93,54 +94,49 @@
 \maketitle
 
 \begin{abstract}
-  Fill in abstract
+  Podcasts have interesting properties for NLP analysis due to their unstructured conversational format. We investigate conversational dynamics in podcasts through several lenses on the SPORC dataset. We look at sentence level sentiment polarity using both transformer-based and lexicon-based methods. We detect and cluster interruptions based on temporal dimensions. We identify CTAs a hybrid pipeline using both rule-based and LLM methods.
+  Lastly, we perform a correlation analysis of these to uncover interesting relationships, and look at the impact of interruptions on sentiment. The results reveal genre level differences across these dimensions, and the correlation analysis reveal significant relationships between certain properties.
 \end{abstract}
 
 
 \section{Introduction}
-Podcasts are becoming increasingly popular as a form of entertainment for the general population, but the world of Natural Language Processing (NLP) they are especially interesting due to their loose and unstructured conversational format ranging from monologues to multi-speaker discussions. This makes podcasts interesting for NLP analysis, since we can look not only at the spoken content but also at other dimensions to shed light on timing, speakers, overlap and tune of the speakers throughout the conversation. Furthermore, podcasts are a great reflection of the messiness of real-world conversation, so the understanding of conversational dynamics in podcasts will also have broader use and value.
+Podcasts are a popular form of entertainment, but to the world of Natural Language Processing (NLP) they are especially interesting due to their loose and unstructured conversational format ranging from monologues to multi-speaker discussions. This makes podcasts interesting for NLP analysis, since we can look not only at the spoken content but also at other dimensions like timing, speakers and overlaps throughout the conversation. Furthermore, podcasts are a great reflection of the messiness of real-world conversation, so the understanding of conversational dynamics in podcasts will also have broader use and value.
 
-In this report we will dive into the analysis of conversational dynamics in podcasts across different genres through 3 different lenses, namely interruptions, sentiment and calls to action. By analyzing the conversational dynamics in three ways and combining the results, we aim to shed light on how these dynamics differ across different genres of podcasts.
-
-Specifically, we work towards answering the following research questions:
+In this report we will dive into the analysis of conversational dynamics in podcasts across different genres through 3 different lenses, namely interruptions, sentiment and calls to action. By analyzing the conversational dynamics in three ways and combining the results, we aim to shed light on how these dynamics differ across different genres of podcasts. Specifically, we work towards answering the following research questions:
 \begin{itemize}
-    \item [\textbf{RQ1:}] How does the polarity and intensity of sentiment evolve over the course of an episode, and how does it differ by genre?
+    \item [\textbf{RQ1:}] How does polarity evolve over the course of an episode, and how does it differ by genre?
     \item [\textbf{RQ2:}] How do patterns of interruptions differ across genres?
-    \item [\textbf{RQ3:}] How does the frequncy and timing of calls to action differ by genre?
+    \item [\textbf{RQ3:}] How does CTAs behave in terms of freqeuncy and timing?
     \item [\textbf{RQ4:}] What is the nature of the relationships between sentiment, interruptions and calls to action?
 \end{itemize}
 
 \section{Data}
-The dataset used in this analysis is the Structured Podcast Open Research Corpus (SPORC), which is a large multi-modal podcasts dataset containing transcriptions, speaker-turns, speaker information, genres and temporal information. The dataset consists of three levels of data; podcast-, episode- and turn level. The podcast level contains podcast wide metadata and is a collection of episodes. Meanwhile, the episode level data contains metadata on the episode like title, genre, speakers among others, while the turn level data consists of the transciption divided into turns along with the speaker label, start- and end time, duration etc.
+The dataset used in this analysis is the Structured Podcast Open Research Corpus (SPORC) \cite{blitt2025_sporc}, which is a large multi-modal podcasts dataset containing transcriptions, speaker-turns, speaker information, genres and temporal information. The dataset consists of three levels of data; podcast-, episode- and turn level. The podcast level contains podcast wide metadata and is a collection of episodes. Meanwhile, the episode level data contains metadata on the episode like title, genre, speakers among others, and the turn level data consists of the transcription divided into turns along with the speaker label, start- and end time, duration etc.
 
-To prepare the data for use, we had to establish a preprocessing pipeline to performing cleaning, filtering and decomposition of the data to support the subsequent analysis. We have chosen to only work with the podcast episodes in the 10,000 episode sample provided in the dataset due to the large size of the full dataset, since the analysis detailed in this report serves only as an indicator of potentially interesting findings, not conclusive evidence of such.
+To prepare the data for use, we had to establish a preprocessing pipeline to perform cleaning, filtering and decomposition of the data to support the subsequent analysis. We have chosen to only work with the sample version of the dataset due to the size of the full dataset, since the analysis detailed in this report serves only as an indicator of potentially interesting findings, not conclusive evidence of such.
 
-Upon loading the sample the dataset, we filter on the portion of the episodes containing one or more speaker turns, since the existence of turns deliver the temporal information and speaker labels used for analysis. The relevant set of episodes are transformed to a dataframe with the relevant attributes, and an additional dataframe stores the turns associated with these episodes along with additional properties related to the cleaning of the turns textual content. These turns are split into singular sentences to be used as the unit of analysis for the call to action and sentiment analysis, which is then aggregated back to turn- and episode level results for reporting, visualization and comparison purposes.
+Upon loading the sample the dataset, we filter on the portion of the episodes with one or more speaker turns, since the existence of turns deliver the temporal information used in the analysis. The set of episodes is transformed to a dataframe with the relevant attributes, and an additional dataframe stores the associated turns along with additional properties related to the cleaning of the textual content. These turns are split into singular sentences to be used as the unit of analysis for the call to action and sentiment analysis, which is then aggregated back to turn- and episode level results for reporting, visualization and comparison purposes.
 
-In working with the dataset we discovered a number of issues, which affects the analysis. Among others it is observed that multiple back to back turns are labeled as the same speaker, podcasts listed to have no guests sometimes have multiple speaker labels and a large number of turns consist of only a few words. These issues suggest quality issues in the automated inference of metadata using e.g. NER and heuristics, which should be accounted for when trying to conclude on the results on the performed analysis.
+In working with the dataset we discovered a number of issues, which affects the analysis. Among others it is observed that multiple back to back turns are labeled as the same speaker and a large number of turns consist of only a few words. These issues suggest quality issues in the automated inference of metadata using e.g. NER and heuristics, which should be accounted for when concluding on the results.
 
 \section{Methods}
-This section will detail the methodological approach to performing the analysis with the aim of answering the posed research questions. 
-
 \subsection{Sentiment analysis}
 To investigate the tone of the conversations, we perform sentiment analysis at the sentence level before aggregating results to turn, episode and genre levels. Sentiment can be quantified in different ways depending on the approach, but for this analysis the focus is on the polarity of the conversations, i.e. if the statements are positive, negative or neutral. Due to the time and resource constraints associated with this project it has not been possible to create an annotated set of correct labels for direct evaluations. Instead, we have chosen to use and compare two fundamentally different approaches to polarity classification to test the level of agreement as an informal robustness check.
 \begin{enumerate}[leftmargin=*]
 
-\item \textbf{DistilBERT} is a transformer based classifier finetuned on the SST-2 sentiment benchmark consisting of movie reviews. This model outputs a polarity label along with a confidence score for each sentence. These are combined in a single weighted score to allow for quantitative comparison. 
+\item \textbf{DistilBERT} \cite{distilbert} is a transformer based classifier finetuned on the SST-2 sentiment benchmark \cite{sst2} consisting of movie reviews. This model outputs a polarity label along with a confidence score for each sentence. These are combined in a single weighted score to allow for quantitative comparison. 
 
-\item \textbf{VADER} on the other hand is a lexicon based sentiment classifier designed for shorter and more informal pieces of text. Vader outputs a continues score containing both polarity and intensity at once. 
+\item \textbf{VADER} \cite{vader} on the other hand is a lexicon based sentiment classifier designed for shorter and more informal pieces of text. Vader outputs a continues score containing both polarity and intensity at once. 
 \end{enumerate}
 
-The two methods differ in their leverage of contextual information, their ideal text complexity and lenght and sensitivity to domain mismatches, which makes them interesting to compare on a dataset not ideally suited for either original domain. If a large degree of agreement is observed e.g. at the genre level our confidence in the results will increase even in the absence of formal accuracy evaluations of each method.
+The two methods differ in their leverage of contextual information, their ideal text complexity and length and sensitivity to domain mismatches, which makes them interesting to compare on a dataset not ideally suited for either original domain. If a large degree of agreement is observed e.g. at the genre level our confidence in the results will increase even in the absence of formal accuracy evaluations of each method.
 
-Beyond assigning polarity scores to the data and comparing agreement, we also wish to investigate these patterns and the method performance. The sentence level polarity is aggregated to turn and episode levels, which allow us to look at polarity levels throughout episodes as a time series for each genre to compare these patterns. To understand the results better we also perform formal agreement analysis using Kohen's kappa as a metric, and a confusion matrix to investigate the weak areas of agreement. Furthermore, we pick out the top sentences with the lowest- and highest confidence to see if these reveal any patterns or shortcuts in the classification. Lastly, we perform a negation flip-test to see if the methods are robust to changing the polarity of a sentence by prefixing it with "not".
+Beyond assigning polarity scores to the data and comparing agreement, we also wish to investigate these patterns and the method performance. The sentence level polarity is aggregated to turn and episode levels, which allow us to look at polarity levels throughout episodes as a time series for each genre to compare these patterns. To understand the results better we also perform formal agreement analysis using Cohen's kappa as a metric, and a confusion matrix to investigate the weak areas of agreement. Furthermore, we pick out the top sentences with the lowest- and highest confidence to see if these reveal any patterns or shortcuts in the classification. Lastly, we perform a negation flip-test to see if the methods are robust to changing the polarity of a sentence by prefixing it with "not".
 
 \subsection{Interruptions analysis}
-An interruption is defined to be the act of talking before someone else is finished talking, so naturally we resort to that definition for our detection pipeline of interruptions in the dataset. For each turn, we look at the end time of the current  turn as well as the start time of the next turn as well as if the speakers are different, and it that holds true, a turn is classified as an interruption. 
+An interruption is defined to be the act of talking before someone else is finished talking, so naturally we resort to that definition for our detection pipeline of interruptions in the dataset. For each turn, we look at the end time of the current turn and the start time of the next turn, if the speakers are different, and it that holds true, a turn is classified as an interruption. 
 
-To be able to apply machine learning algorithms to the set of interruptions in order to analyse them, we have to transform the interruptions into some mathematical space, where their positions (and communal positions) carry semantic information. We do that by applying sentence embeddings to each one. The ones that I chose to use were from the HuggingFace SentenceTransformer package and had 384 dimensions, which is very high-dimensional considering the size of our dataset and might hinder efficiency and the interpretability of results. To address this, we employ dimensionality reduction techniques, specifically Principal Component Analysis (PCA), to project the embeddings into a lower-dimensional space while preserving the majority of variance. This step eliminates redundant dimensions of the dataset as well as computational cost, enabling more efficient clustering.
-
-Clustering techniques are then applied to identify patterns among interruptions. We explore several approaches, including DBSCAN and K-means. 
+To be able to apply machine learning algorithms to the set of interruptions in order to analyze them, we have to transform the interruptions into some mathematical space that encode the semantic information. We do that by applying sentence embeddings to each one. The ones that we chose to use were from the HuggingFace and had 384 dimensions, which is very high-dimensional considering the size of our dataset and might hinder efficiency and the interpretability of results. To address this, we employ dimensionality reduction techniques with Principal Component Analysis to project the embeddings into a lower-dimensional space while preserving the majority of variance. This step eliminates redundant dimensions of the dataset as well as computational cost, enabling more efficient clustering. Clustering techniques are then applied to identify patterns among interruptions. We explore several approaches, including DBSCAN and K-means. 
 
 \begin{enumerate}[leftmargin=*]
 
@@ -150,9 +146,7 @@ Clustering techniques are then applied to identify patterns among interruptions.
 
 \end{enumerate}
 
-By comparing these clustering methods, we aim to uncover distinct interruption types and unravel hidden information that might be encoded within the embeddings. To further interpret our clustering, we resort to dimensionality reduction techniques to visualize our clusterings in 3d space. For this purpose our choice was t-SNE, which is specifically engineered for this purpose. 
-
-Lastly, we also looked at conditioning the clustered points on specific features such as the genres to examine if specific genres tend to lie within certain clusters. Moreover, to gain more perspective on the conversational dynamics of interruptions, we created a weighted and directed graph of the interruptions to see who interrupts who and how frequently.
+By comparing these clustering methods, we aim to uncover distinct interruption types and unravel hidden information that might be encoded within the embeddings. Both methods were imported from \cite{scikitlearn_clustering}. To further interpret our clustering, we resort to dimensionality reduction techniques to visualize our clusterings in 3d space. For this purpose our choice was t-SNE, which is specifically engineered for this purpose. Lastly, we also looked at conditioning the clustered points on specific features such as the genres to examine if specific genres tend to lie within certain clusters. Moreover, to gain more perspective on the conversational dynamics of interruptions, we created a weighted and directed graph of the interruptions to see who interrupts who and how frequently.
 
 \subsection{Call to action analysis}
 A call to action (CTA) is treated as a directive prompt aimed at the listener, encouraging an immediate, concrete action such as subscribing, visiting a site, donating, sharing, or following a link \cite{achmanndenkler2024cta}. We operationalize CTA detection as a binary turn label to prioritize robustness and interpretability; since CTAs are sparse and fine-grained having CTA subtypes would require annotation resources and guidelines that are out of scope for this project.
@@ -170,144 +164,179 @@ This design intentionally accepts false positives in the rule based stage to fla
 Turns are sentence split with NLTK. A sentence is flagged if it matches URL patterns, contains CTA phrases or multi word CTA expressions, or satisfies an imperative like structure combined with a CTA verb and, when relevant, second person forms. After this stage, $9.4\%$ of turns are flagged as CTA candidates, and the mean share of flagged sentences within a turn is $4.6\%$, reinforcing that most turns contain no CTA cues and that candidate cues tend to be localized.
 
 \paragraph{LLM classification and deduplication:}
-Podcast intros, outros, and sponsor reads can repeat across episodes, so we normalize flagged sentences by lowercasing and stripping punctuation, then deduplicate them prior to LLM inference. In the flagged set, $6.4\%$ of sentence instances are repeats under this normalization, which reduces redundant LLM calls without changing downstream aggregation. We run few shot classification with \texttt{microsoft/Phi-3-mini-128k-instruct} using vLLM for high throughput inference, and we enforce deterministic outputs with temperature $0$ and top-$p$ $= 1$. The 14 prompts exceeding the model context window are excluded from LLM inference and marked as CTA negative.
+Podcast intros, outros, and sponsor reads can repeat across episodes, so we normalize flagged sentences by lowercasing and stripping punctuation, then deduplicate them prior to LLM inference. In the flagged set, $6.4\%$ of sentence instances are repeats under this normalization, which reduces redundant LLM calls without changing downstream aggregation. We run few shot classification with \texttt{microsoft/Phi-3-mini-128k-instruct} \cite{abdin2024phi3technicalreporthighly} using vLLM for high throughput inference, and we enforce deterministic outputs with temperature $0$ and top-$p$ $= 1$. The 14 prompts exceeding the model context window are excluded from LLM inference and marked as CTA negative.
 
 \subsection{Correlation analysis}
 
 After having done our linguistic analysis in the three aforementioned parts and enriched the dataset with new columns and findings, it only makes sense to interweave them and see how they correlate with each other. The go-to statistical tool for analyzing this, is going to be regression analysis to figure out the relationships between the different variables. The main relationships that we hypothesize being true are: correlation between negative sentiment and interruptions, correlation between positive sentiment and call to action. In addition to regression analysis, we implemented a framework to analyze sentiment in the turns surrounding interruptions, with the goal of examining their contextual interplay.
 
 \section{Results}
-The section details the results related to each research question.
-
 \subsection{Sentiment results}
-When comparing the aggregated polarity scores for the two methods across all genres it is clear that VADER gives a more smooth picture of each genre over the duration of an episode length compared to DistilBERT. This is highly related to the way of calculating the DistilBERT weighted score, since high levels of confidence will result in extreme positive or negative values, which is most often the case. VADER in comparison uses the neutral polarity more with scores being distributed more across the full [-1,1] scale, and more skewed towards the positive side of that. This is also evident when looking at the genre distributions for each method in figure xx.
+When comparing the aggregated polarity scores for the two methods across all genres it is clear that VADER gives a more smooth picture of each genre over the duration of an episode compared to DistilBERT, see Figures ~\ref{fig:distilbert_time} and ~\ref{fig:vader_time}. This is related to the calculation of the DistilBERT weighted score, since high levels of confidence will result in extreme values, which is most often the case. VADER in comparison has scores distributed more across the full [-1,1] scale, and is more skewed towards the positive side. This is also evident when looking at the genre distributions for each method in Figures ~\ref{fig:distilbert_dist} and ~\ref{fig:vader_dist}.
 
-The two genres with the lowest polarity score across both methods is government and true crime, with a score of $0.18$ and $0.07$ respectively for VADER and $-0.59$ and $-0.24$ for DistilBERT. The top genres with the highest polarity is arts and technology with a score of $0.50$ and $0.49$ for VADER, while it is science and education with a score of $0.20$ and $0.19$ for DistilBERT. This highlights not only a difference in the top scores, but also in the range and extremity of the assigned scores, where DistilBERT fluctuates around 0 due to the extreme high and low scores, which can be seen in figure xx. The rate of positive polarity sentences across all episodes in a genre ranges from $0.48$ to $0.84$ for VADER, and $0.19$ to $0.60$ for DistilBERT, which then again highlights the difference in skews towards positive and negative scores. 
+The two genres with the lowest polarity score across both methods is government and true crime, with a score of $0.18$ and $0.07$ respectively for VADER and $-0.59$ and $-0.24$ for DistilBERT. The top genres with the highest polarity is arts and technology with a score of $0.50$ and $0.49$ for VADER, while it is science and education with a score of $0.20$ and $0.19$ for DistilBERT. This highlights not only a difference in the top scores, but also in the range and extremity of the assigned scores, where DistilBERT fluctuates around 0 due to the extreme high and low scores, which can be seen in Figures ~\ref{fig:distilbert_time} and ~\ref{fig:vader_time}. The rate of positive polarity sentences across all episodes in a genre ranges from $0.48$ to $0.84$ for VADER, and $0.19$ to $0.60$ for DistilBERT, which again highlights the difference in positive and negative scores. 
 
-The two methods have a low agreement, with Kohen's kappa landing at $0.19$, where $0$ would corrospond to agreement observed during random guessing. This results is not surprising given the previous results presented. The lack of agreement can most probably be linked to the difference in overall polarity with DistilBERT having an overall positive label rate of $0.53$ compared to $0.79$ for VADER. When examining the confusion matrix in figure xx, it is also clear that a large part of the disagreement happens in cases where VADER assigns a positive score and DistilBERT assigns a negative score, which is to unexpected at this level of inbalance between the methods. 
+The two methods have low agreement, with Cohen's kappa at $0.19$. The lack of agreement can probably be linked to the difference in overall polarity with DistilBERT having an overall positive label rate of $0.53$ compared to $0.79$ for VADER. When examining the confusion matrix in Table ~\ref{tab:sentiment_confusion}, it is also clear that a large part of the disagreement is in cases where VADER assigns a positive score and DistilBERT assigns a negative score, which is expected at this level of label imbalance. 
 
-When looking at the low confidence sample sentences for DistilBERT there are some interesting findings. The top sentence is actually just a url, which is not inherently positive or negative, this the low confidence is justified. However, due to the way of calculating the weighted score, this sentence still receives a score of $0.5$ making it appear more positive than neutral in the subsequent aggregations, which is not well suited. For the top confidence sentences we see clear shortcuts to positive scores, e.g. words like "yes", "friends", "good" and "inspiring". The negation flip test showed a perfect score for both methods in flipping the polarity when introducing negation for both originally positive and negative statements. 
+When looking at the low confidence sample sentences for DistilBERT there are some interesting findings. The top sentence is actually just a URL, which is not inherently positive or negative, this the low confidence is justified. However, this sentence still receives a score of $0.5$ making it appear more positive than neutral, which is not representative. In the top confidence sentences we see shortcuts to positive scores, e.g. words like "yes", "friends", "good". The negation flip test showed a perfect score for both methods in flipping the polarity when introducing negation for both originally positive and negative statements. 
 
 \subsection{Interruptions results}
-Despite the dataset consisting of $1033$ episodes, we merely arrive at $206$ interruptions in total, which is not really a large foundation to work on, since the number is suspiciously low. Across all genres, Science, Sports, and Comedy were the ones with the highest average number of interruptions, with Science being the leading one with $1.5$ interruptions per episode. As for total number of interruptions, Sports takes the gold medal with $55$ total interruptions, followed by Education with $38$ and Comedy with $25$. In the graph model of the interruptions, our classifier only found a single occurrence of an interruption where neither the interrupter nor the person being interrupted had an inferred speaker name that was not "No Inferred Speaker Name", which essentially deems the graph network not useful on this dataset.
+Despite the dataset consisting of $1033$ episodes, we arrive at $206$ interruptions in total, which is not a large foundation to work on. Across all genres, Science, Sports, and Comedy were the ones with the highest average number of interruptions, with Science being the leading one with $1.5$ interruptions per episode. As for total number of interruptions, Sports has $55$ total interruptions, followed by Education with $38$ and Comedy with $25$. See \ref{fig:interuptions_by_category}. In the graph model of the interruptions, our classifier only found a single occurrence of an interruption where neither the interrupter nor the person being interrupted had an inferred speaker name that was not "No Inferred Speaker Name", which essentially deems the graph network not useful.
 
-Even after reducing embeddings down to 10 dimensions with PCA, results were still far from meaningful due to the lack of data points i.e. interruptions. For k-means, we did not achieve a silhouette score above $0.2$ for any $k$ number of clusters. With DBSCAN we arrive at two clusters, a noise ratio of $0.38$, a silhouette score of $0.23$ and a mean cluster stability of $0.063$ when setting minimum cluster size to $5$. The lack of data points in the clusters also make it hard to infer any inter-cluster relationships between the interruptions that could reveal interesting patterns.
+Even after reducing embeddings down to 10 dimensions with PCA, results were still far from meaningful due to the lack of data points. For k-means, we did not achieve a silhouette score above $0.2$ for any $k$ number of clusters \ref{fig:kmeans}. With DBSCAN we arrive at two clusters, a noise ratio of $0.38$, a silhouette score of $0.23$ and a mean cluster stability of $0.063$ when setting minimum cluster size to $5$ \ref{fig:dbcsan}. The lack of data points in the clusters also make it hard to infer any inter-cluster relationships between the interruptions that could reveal interesting patterns as seen in \ref{fig:cluster_vs_category}.
 
 \subsection{Call to action results}
 
-Across $29{,}116$ flagged sentences, the LLM labels $3{,}803$ sentences as CTA, with a negligible fraction of unparsed outputs. After aggregating back to turns, $1.3\%$ of turns contain at least one CTA sentence, and the mean share of CTA sentences within a turn is $0.4\%$. These turn level CTA indicators, plus the extracted CTA sentence lists per turn, form the basis for subsequent genre level comparisons of CTA frequency and placement. When aggregated back to episode level, this corresponds to 79.8\% of episodes containing a CTA turn. This confirms our belief that, although CTAs appear in a majority of episodes, they are sparse and account for only a small fraction of the overall conversational content.
+Across $29{,}116$ flagged sentences, the LLM labels $3{,}803$ sentences as CTA, with a negligible fraction of unparsed outputs. After aggregating back to turns, $1.3\%$ of turns contain at least one CTA sentence, and the mean share of CTA sentences within a turn is $0.4\%$. These turn level CTA indicators, plus the extracted CTA sentence lists per turn, form the basis for subsequent genre level comparisons of CTA frequency and placement. When aggregated back to episode level, this corresponds to 79.8\% of episodes containing a CTA turn. This confirms our belief that, although CTAs appear in a majority of episodes, they are sparse and account for only a small fraction of the overall conversational content. 
 
-To characterize when CTAs occur within an episode, we compute normalized positions both by turn index and by elapsed time: See Figure~\ref{fig:cta_position_turn_vs_time}. The resulting distributions show strong concentration near episode boundaries, especially at the end, with a smaller cluster near the beginning, consistent with closing and opening CTA segments. Time normalization additionally captures that end loaded CTAs often occur in extended closing segments, and it reveals mid episode CTAs that are less apparent when normalizing only by turn count. This may be due to substantial variation in turn length across episodes, which makes the turn index corresponding to most temporal points highly inconsistent. CTAs occurring near the middle of an episode are therefore spread across a wider range of turn indices, while opening and closing CTAs cluster more tightly because these segments tend to be more structurally regular.
+To characterize when CTAs occur within an episode, we compute normalized positions both by turn index and by elapsed time: See Figure~\ref{fig:cta_position_turn_vs_time}. The resulting distributions show strong concentration near episode boundaries, especially at the end, consistent with closing and opening CTA segments. Time normalization additionally captures that end loaded CTAs often occur in extended closing segments, and it reveals mid episode CTAs that are less apparent when normalizing only by turn count. This may be due to substantial variation in turn length across episodes, which makes the turn index corresponding to most temporal points highly inconsistent. CTAs occurring near the middle of an episode are therefore spread across a wider range of turn indices, while opening and closing CTAs cluster more tightly because these segments are more structurally regular.
 
-Taken together, these positional patterns could suggest that CTAs primarily serve commercial or engagement driven purposes, such as sponsor reads, subscription prompts, or requests to follow external links. This aligns with conventional podcast structure, where promotional material is placed at the start, around mid episode breaks, or in closing segments. This interpretation is further reinforced by the CTA word cloud shown in Figure~\ref{fig:cta_word_cloud}. Frequent appearance of terms related to platforms, links, and support reflects promotional and engagement focused messaging. Finally, we note that $15.9\%$ of CTA marked sentences are exact repeats under normalization, which is consistent with the reuse of fixed scripts in podcast intros, outros, and sponsor segments that recur across episodes: See Figure~\ref{fig:cta_sentence_repeats}.
+The positional patterns could suggest that CTAs primarily serve commercial or engagement driven purposes, such as sponsor reads, subscription prompts, or requests to follow external links. This aligns with conventional podcast structure, where promotional material is placed at the start, around mid episode breaks, or in closing segments. This interpretation is further reinforced by the CTA word cloud shown in Figure~\ref{fig:cta_word_cloud}. Frequent appearance of terms related to platforms, links, and support reflects promotional and engagement focused messaging. Finally, we note that $15.9\%$ of CTA marked sentences are exact repeats under normalization, which is consistent with the reuse of fixed scripts in these segments that recur across episodes: See Figure~\ref{fig:cta_sentence_repeats}.
 
 \subsection{Correlations and combined results}
 
-Looking at the covariance matrix, reveals a moderate positive association between interruption occurrence and several turn-level characteristics. In particular, the strongest relationships are observed with the number of sentences that contain sentiment $(\rho = 0.38)$, the total number of sentences $(\rho = 0.25)$, the number of words $(\rho = 0.23)$, and the duration of the turn $(\rho = 0.22)$. These findings suggest that longer and more expressive turns are more likely to coincide with interruptions. For call to action, duration and number of sentences are also some of the most correlated ones along with the business category. This also seems reasonable, as longer sentences and longer turns provide more opportunity for CTAs to occur. Business-related episodes tend to include promotions and advertisements. For sentiment, there is really not much to highlight. A logistic regression using VADER compound sentiment as the sole predictor reveals a weak positive association with interruption occurrence. While the coefficient is positive $(\beta = 0.65)$, indicating higher odds of interruption for more positive sentiment, the effect is only marginally significant $(p = 0.052)$. The coefficient for vader mean was negative and statistically significant $(\beta = -0.257, p < 0.001)$. This indicates that increases in sentiment positivity are associated with a lower likelihood of including a CTA. 
-
-Interruption seems to have some impact on the sentiment in the surrounding turns based on our plot. The average sentiment before is somewhat smoother around $0$ i.e. very neutral, but afterwards, there is more variance present. This is to be expected to some degree, as interruptions might occur in heated discussion where the sentiment could turn negative, or in more enthusiastic scenarios, where the opposite would hold true. 
+Looking at the covariance matrix \ref{fig:covariance_matrix}, reveals a moderate positive association between interruption occurrence and several turn-level characteristics. In particular, the strongest relationships are observed with the number of sentences that contain sentiment, the total number of sentences, the number of words, and the duration of the turn. These findings suggest that longer and more expressive turns are more likely to coincide with interruptions. For call to action, duration and number of sentences are also some of the most correlated ones. This also seems reasonable, as longer sentences and longer turns provide more opportunity for CTAs to occur. A logistic regression using VADER compound sentiment as the sole predictor reveals a weak positive association with interruption occurrence. While the coefficient is positive $(\beta = 0.65)$, indicating higher odds of interruption for more positive sentiment, the effect is only marginally significant $(p = 0.052)$. The coefficient for VADER mean was negative and statistically significant $(\beta = -0.257, p < 0.001)$. This indicates that increases in sentiment positivity are associated with a lower likelihood of including a CTA. Furthermore, interruption seems to have some impact on the sentiment in the surrounding turns based on our plot \ref{fig:sentiment_around_interruptions}. The average sentiment before is somewhat smoother around $0$ i.e. very neutral, but afterwards, there is more variance present, which is to be expected to some degree.
 
 \section{Discussion}
-The results flag a number of well known issues with the dataset as well as the methodological approach in this project. The large variation in number of turns related to one episode, and the length of sentences in one turn make it harder to compare aggregated sentiment across different episodes where some detail may be canceled out. The issues with turns and the assignment of speaker labels to turns also prove to be an issue in the interruptions detection pipeline which relies on accurate speaker and temporal information. The subsequent analysis of the interruptions is then also impacted by the quality issues in the data, which makes it virtually impossible to do e.g. graph modelling, clustering etc., which could potentially shine light on interesting patterns and conclusions. 
+The results flag a number of issues with the dataset as well as the methodological approach in this project. The large variation in number of turns in each episode, and the length of sentences in one turn make it harder to compare aggregated sentiment across different episodes and locate CTAs and interruptions. The issues with turns and the assignment of speaker labels also prove to be an issue in the interruption detection pipeline which relies on accurate labeling. The subsequent analysis of the interruptions is then also impacted by the scarcity of the detected interruptions, which makes it virtually impossible to do e.g. graph modelling, clustering etc., which could potentially shine light on interesting patterns and conclusions. 
 
-The sentiment analysis across two methods proved to show large differences in their overall scoring across genres, which is supported by low agreement and large imbalance in assignment of labels. Due to the lack of ground truth data it is not possible to find out which method is more accurate, but the balance in negative and positive labels for DistilBERT would suggest this to be better at handling the length and complexity of podcast transcriptions. However, it was also shown that the calculation of DistilBERT scores was flawed in assigning realistic weights to all sentences. The investigation of the high confidence samples show DistilBERT using keyword shortcuts to classify positive polarity, but due to the awkward cutting of turns and thus sentences it is hard to see the actual context of the use of these shortcut words.
+The sentiment analysis across two methods showed differences in their scoring across genres, which is supported by low agreement and large imbalance in labels. Due to the lack of ground truth data it is not possible to see which method is more accurate. However, it was shown that the calculation of DistilBERT scores was flawed in assigning realistic weights to all sentences with e.g. the high confidence samples using keyword shortcuts to classify positive polarity.
 
-The CTA analysis shows that calls to action are a common but structurally constrained component of podcast episodes. Although nearly four fifths of episodes contain at least one CTA turn, CTAs occupy only a small fraction of total conversational content, indicating that they are strategically inserted rather than interwoven throughout discussion. This pattern supports the interpretation of CTAs as functional segments that serve commercial or engagement driven purposes, rather than as organic elements of conversational flow. However, we should interpret with caution, as the CTA detection pipeline relies in part on a manually constructed lexicon and heuristic filtering, which may introduce some bias. Additionally, while the hybrid rule based and LLM approach provides flexibility and scalability, fine tuning a lightweight classifier on annotated data would likely yield more consistent results at lower inference cost, and would be a good direction for future work..
+The CTA analysis shows that calls to action are a common but structurally constrained component of podcast episodes. Although nearly four fifths of episodes contain at least one CTA turn, CTAs occupy only a small fraction of total conversational content, indicating that they are strategically inserted rather than interwoven throughout discussion. This pattern supports the interpretation of CTAs as functional segments that serve commercial or engagement driven purposes, rather than as organic elements of conversational flow. However, we should interpret with caution, as the CTA detection pipeline relies in part on a manually constructed lexicon and heuristic filtering, which may introduce some bias. Additionally, while the hybrid rule based and LLM approach provides flexibility and scalability, fine tuning a lightweight classifier on annotated data would likely yield more consistent results at lower inference cost, and would be a good direction for future work.
 
-The imbalanced distribution of amount of episodes within each genre also impact the interpretation of the results. On the top end we have Education with 142 episodes, and on the bottom we have History with only a single episode, and thus the distribution of interruptions and CTAs across genres in totals is not very informative. We observed more interruptions in the genres Sports, Education and Comedy, which all are in the top end of the amount of episodes and thus not a surprising result. On the other hand Science is foudn to be the genre with the most interruptions per episode, which is more telling, since there are only 4 episodes of this genre in the final dataset. 
+The imbalanced amount of episodes within each genre in the sample also impact the result validity. On the top end we have Education with 142 episodes, while History only has one episode, and thus the absolute distribution of interruptions and CTAs across genres is not very informative. We observed most interruptions in the genres Sports, Education and Comedy, which all have many episodes and it is thus not a surprising result. On the other hand Science is found to be the genre with the most interruptions per episode, which is more telling, since there are only 4 episodes of this genre in the final dataset. 
 
 \section{Conclusion}
-Kort opsummering på resultater og diskussion
+This project investigated conversational dynamics in podcast through the lenses of sentiment, interruptions and CTAs. The results showed genre level differences and temporal patterns across these different units of analysis. Furthermore, we investigated and found relationsships between these three components and metrics like turn length, duration etc. The results however are hardly conclusive due to the quality of the data as well as the initial sampling of a smaller dataset. Running the analysis on the complete dataset with adjusted methodology and ground truth labels would significantly approve the aforementioned issues.
 
 \newpage
 \bibliographystyle{plain} % can change to apa, but then we need to change the way cite was used in CTA methods section
 \bibliography{references}
-
-\section*{References}
-\medskip
-{
-\small
-
-[1] Achmann-Denkler, M., Fehle, J., Haim, M.,\ \& Wolff, C.\  (2024). {\it Detecting calls to action in multimodal content: Analysis of the 2021 German federal election campaign on Instagram}. arXiv preprint arXiv:2409.02690.
-
-[2] Alexander, J.A.\ \& Mozer, M.C.\ (1995) Template-based algorithms for
-connectionist rule extraction. In G.\ Tesauro, D.S.\ Touretzky and T.K.\ Leen
-(eds.), {\it Advances in Neural Information Processing Systems 7},
-pp.\ 609--616. Cambridge, MA: MIT Press.
-
-
-[3] Bower, J.M.\ \& Beeman, D.\ (1995) {\it The Book of GENESIS: Exploring
-  Realistic Neural Models with the GEneral NEural SImulation System.}  New York:
-TELOS/Springer--Verlag.
-
-
-[4] Hasselmo, M.E., Schnell, E.\ \& Barkai, E.\ (1995) Dynamics of learning and
-recall at excitatory recurrent synapses and cholinergic modulation in rat
-hippocampal region CA3. {\it Journal of Neuroscience} {\bf 15}(7):5249-5262.
-}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newpage
 \appendix
 
-\section{Technical Appendices and Supplementary Material}
-Technical appendices with additional results, figures, graphs and proofs may be submitted with the paper submission before the full submission deadline (see above), or as a separate PDF in the ZIP file below before the supplementary material deadline. There is no page limit for the technical appendices.
-
-
 \section{Figures}
+\subsection{Sentiment Figures}
 
-\subsection{CTA Figures}
-
-\begin{figure}[h]
+\begin{figure}[H]
     \centering
-    \includegraphics[width=\linewidth]{../figures/cta_position_turn_vs_time.png}
-    \caption{Distribution of CTA positions within episodes under two normalization schemes. The left panel shows CTA locations normalized by turn index, while the right panel shows normalization by elapsed time. Turn based normalization produces a more diffuse distribution around the episode midpoint due to variation in turn length, whereas time based normalization yields clearer clustering near the beginning and end of episodes.}
-    \label{fig:cta_position_turn_vs_time}
+    \includegraphics[width=\linewidth]{figures/distilbert_time.png}
+    \caption{Polarity levels across episodes normalized by elapsed time divided by each genre for DistilBERT weighted polarity scores.}
+    \label{fig:distilbert_time}
 \end{figure}
 
-\begin{figure}[h]
+\begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\linewidth]{../figures/cta_word_clould.png}
-    \caption{Word cloud of the most frequent tokens in CTA sentences after applying stopword removal.}
-    \label{fig:cta_word_cloud}
+    \includegraphics[width=\linewidth]{figures/vader_time.png}
+    \caption{Polarity levels across episodes normalized by elapsed time divided by each genre for VADER polarity scores.}
+    \label{fig:vader_time}
 \end{figure}
 
-\begin{figure}[h]
+\begin{figure}[H]
     \centering
-    \includegraphics[width=0.7\linewidth]{../figures/cta_sent_repeats.png}
-    \caption{Proportion of CTA sentences that are repeated versus unique after normalization. A non trivial share of CTA content consists of exact repeats, consistent with reused intro, outro, or sponsor scripts across episodes.}
-    \label{fig:cta_sentence_repeats}
+    \includegraphics[width=\linewidth]{figures/distilbert_dist.png}
+    \caption{Distribution of DistilBERT weighted polarity scores across genres.}
+    \label{fig:distilbert_dist}
 \end{figure}
 
-\begin{figure}[h]
+\begin{figure}[H]
     \centering
-    \includegraphics[width=\linewidth]{../figures/cta_freq_by_cat.png}
-    \caption{Frequency of CTA occurrences across content categories. The distribution highlights systematic differences in how often calls to action are used across categories.}
-    \label{fig:cta_frequency_by_category}
+    \includegraphics[width=\linewidth]{figures/vader_dist.png}
+    \caption{Distribution of VADER polarity scores across genres.}
+    \label{fig:vader_dist}
 \end{figure}
 
-\subsection{Interruption Figures}
+\begin{table}[h]
+\centering
+\begin{tabular}{lcc}
+\hline
+ & VADER negative & VADER positive \\
+\hline
+DistilBERT negative & 4216 & 9488 \\
+DistilBERT positive & 1847 & 13565 \\
+\hline
+\end{tabular}
+\vspace{10pt}
+\caption{Confusion matrix between DistilBERT and VADER polarity labels. Rows correspond to DistilBERT predictions and columns to VADER predictions.}
+\label{tab:sentiment_confusion}
+\end{table}
 
-\begin{figure}[h]
-    \centering
-    \includegraphics[width=\linewidth]{../figures/average_sentiment_demeaned_20.png}
-    \caption{Average sentiment 20 turns before and after interruptions}
-    \label{fig:sentiment_around_interruptions}
-\end{figure}
+\subsection{Interruption figures}
 
-\begin{figure}[h]
+\begin{figure}[H]
     \centering
-    \includegraphics[width=\linewidth]{../figures/interuptions_by_category.png}
+    \includegraphics[width=\linewidth]{figures/interruptions_by_category.png}
     \caption{Distribution of interruptions across genres on an episode level}
     \label{fig:interuptions_by_category}
 \end{figure}
 
-\begin{figure}[h]
+\begin{figure}[H]
     \centering
-    \includegraphics[width=\linewidth]{../figures/cluster_vs_category}
+    \includegraphics[width=\linewidth]{figures/cluster_vs_category}
     \caption{Distribution of which clusters interruptions lie in across genres with K-means as the clustering method}
     \label{fig:cluster_vs_category}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{figures/kmeans.png}
+    \caption{K-means clustering}
+    \label{fig:kmeans}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{figures/dbscan.png}
+    \caption{DBSCAN clustering}
+    \label{fig:dbcsan}
+\end{figure}
+
+\subsection{CTA figures}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{figures/cta_position_turn_vs_time.png}
+    \caption{Distribution of CTA positions within episodes under two normalization schemes. The left panel shows CTA locations normalized by turn index, while the right panel shows normalization by elapsed time. Turn based normalization produces a more diffuse distribution around the episode midpoint due to variation in turn length, whereas time based normalization yields clearer clustering near the beginning and end of episodes.}
+    \label{fig:cta_position_turn_vs_time}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\linewidth]{figures/cta_word_clould.png}
+    \caption{Word cloud of the most frequent tokens in CTA sentences after applying stopword removal.}
+    \label{fig:cta_word_cloud}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\linewidth]{figures/cta_sent_repeats.png}
+    \caption{Proportion of CTA sentences that are repeated versus unique after normalization. A non trivial share of CTA content consists of exact repeats, consistent with reused intro, outro, or sponsor scripts across episodes.}
+    \label{fig:cta_sentence_repeats}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{figures/cta_freq_by_cat.png}
+    \caption{Frequency of CTA occurrences across content categories. The distribution highlights systematic differences in how often calls to action are used across categories.}
+    \label{fig:cta_frequency_by_category}
+\end{figure}
+
+\subsection{Correlation and combined analysis figures}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\linewidth]{figures/average_sentiment_demeaned_20.png}
+    \caption{Average sentiment 20 turns before and after interruptions}
+    \label{fig:sentiment_around_interruptions}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\linewidth]{figures/correlation_matrix.png}
+    \caption{Covariance matrix for all numeric variables excluding dummy variables as they are omitted for readability}
+    \label{fig:covariance_matrix}
 \end{figure}
 
 \end{document}
