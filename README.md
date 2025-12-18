@@ -3,7 +3,7 @@
 # Understanding conversation dynamics - NLP analysis of sentiment, language and interruptions in podcasts
 
 ## Abstract
-This project aims to analyze conversational dynamics in podcasts using the SPoRC dataset, which provides annotated podcast transcriptions with speaker and dialogue turn information. In the project, we focus on three key elements of conversational dynamics; interruptions, calls to action, and sentiment. These will be the lenses for understanding how podcast conversations differ across genres. By analyzing the existence and nature of interruptions, the use of persuasive and action oriented language toward the listeners, along with the sentiment and tone, we wish to compare and characterize how conversational patterns vary between genres of podcasts. The analysis aims at sheding light on how podcasts communicate and engage audiences differently depending on their genre.
+This project aims to analyze conversational dynamics in podcasts using the SPORC dataset, which provides annotated podcast transcriptions with speaker and dialogue turn information. In the project, we focus on three key elements of conversational dynamics; interruptions, calls to action, and sentiment. These will be the lenses for understanding how podcast conversations differ across genres. By analyzing the existence and nature of interruptions, the use of persuasive and action oriented language toward the listeners, along with the sentiment and tone, we wish to compare and characterize how conversational patterns vary between genres of podcasts. The analysis aims at sheding light on how podcasts communicate and engage audiences differently depending on their genre.
 
 ## Contributions
 The project contributes a data-driven analytical study of conversational dynamics in podcasts, offering insights into how rhetorical and emotional strategies differ across podcast genres. Specifically:
@@ -14,7 +14,7 @@ The project contributes a data-driven analytical study of conversational dynamic
     - Sentiments to understand tone and affect across genres and temporal dimensions
 
 ## Use of additional data
-The analysis is centered around the SPoRC dataset, and is supported by logical flagging and lexicon based approaches to some degree featuring additional data built in to these methods. 
+The analysis is centered around the SPORC dataset, and is supported by logical flagging and lexicon based approaches to some degree featuring additional data built in to these methods. 
 
 ## Methods
 The project is centered around three different analytical components:
